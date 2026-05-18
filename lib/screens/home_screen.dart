@@ -94,7 +94,7 @@ class HomeScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'ACESSO RÁPIDO',
+                        'NOTÍCIAS',
                         style: GoogleFonts.outfit(
                           fontSize: 11,
                           fontWeight: FontWeight.w900,
@@ -103,7 +103,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'MUDAR',
+                        'VER TUDO',
                         style: GoogleFonts.outfit(
                           fontSize: 10,
                           fontWeight: FontWeight.w900,
@@ -114,18 +114,26 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 190,
-                  child: ListView(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    children: const [
-                      _QuickAccessCard(icon: FontAwesomeIcons.trophy, title: 'Grupos'),
-                      _QuickAccessCard(icon: FontAwesomeIcons.listOl, title: 'Classificação'),
-                      _QuickAccessCard(icon: FontAwesomeIcons.sitemap, title: 'Chaves'),
-                      _QuickAccessCard(icon: FontAwesomeIcons.users, title: 'Elencos'),
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate(
+                    const [
+                      SizedBox(height: 6),
+                      _NewsCard(
+                        tag: 'FAVORITO',
+                        time: '2h atrás',
+                        title: 'Brasil lidera as casas de aposta para o título',
+                        imageUrl: 'https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf?auto=format&fit=crop&q=80&w=600',
+                      ),
+                      SizedBox(height: 12),
+                      _NewsCard(
+                        tag: 'ÚLTIMA',
+                        time: '5h atrás',
+                        title: 'Sede da grande final confirmada: NY será palco',
+                        imageUrl: 'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&q=80&w=600',
+                      ),
+                      SizedBox(height: 8),
                     ],
                   ),
                 ),
@@ -196,16 +204,88 @@ class _HeroBanner extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image.network(
-              'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80&w=1200',
-              fit: BoxFit.cover,
-              alignment: Alignment.center,
-              errorBuilder: (context, error, stackTrace) => Container(
-                decoration: const BoxDecoration(
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFF79D122), Color(0xFF3A8E15), Color(0xFF163F0E)],
+                  stops: [0.0, 0.58, 1.0],
+                ),
+              ),
+            ),
+            Positioned.fill(
+              child: Opacity(
+                opacity: 0.18,
+                child: CustomPaint(
+                  painter: _FieldStripePainter(),
+                ),
+              ),
+            ),
+            Positioned(
+              right: -8,
+              top: 18,
+              child: Container(
+                width: 72,
+                height: 72,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      Colors.white.withOpacity(0.98),
+                      const Color(0xFFD9E8EE),
+                    ],
+                    stops: const [0.2, 1.0],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.22),
+                      blurRadius: 18,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
+                child: CustomPaint(
+                  painter: _SoccerBallPainter(),
+                ),
+              ),
+            ),
+            Positioned(
+              right: 6,
+              top: -8,
+              child: Transform.rotate(
+                angle: 0.28,
+                child: Container(
+                  width: 78,
+                  height: 22,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0C1420),
+                    borderRadius: BorderRadius.circular(18),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.26),
+                        blurRadius: 12,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                height: 92,
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Color(0xFF1E2A24), Color(0xFF0F1115)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.76),
+                    ],
                   ),
                 ),
               ),
@@ -282,6 +362,67 @@ class _HeroBanner extends StatelessWidget {
   }
 }
 
+class _FieldStripePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = Colors.white;
+    const stripeWidth = 26.0;
+    for (double x = -size.height; x < size.width + size.height; x += stripeWidth * 2) {
+      final path = Path()
+        ..moveTo(x, 0)
+        ..lineTo(x + stripeWidth, 0)
+        ..lineTo(x + stripeWidth + size.height, size.height)
+        ..lineTo(x + size.height, size.height)
+        ..close();
+      canvas.drawPath(path, paint);
+    }
+
+    final linePaint = Paint()
+      ..color = Colors.white.withOpacity(0.22)
+      ..strokeWidth = 2;
+    canvas.drawLine(Offset(size.width * 0.12, size.height * 0.44), Offset(size.width * 0.86, size.height * 0.44), linePaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _SoccerBallPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = size.shortestSide * 0.28;
+
+    final outerPaint = Paint()
+      ..color = const Color(0xFF1A1A1A)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.8;
+    canvas.drawCircle(center, radius, outerPaint);
+
+    final pentagonPaint = Paint()
+      ..color = const Color(0xFF1A1A1A)
+      ..style = PaintingStyle.fill;
+    final pentagon = Path()
+      ..moveTo(center.dx, center.dy - radius * 0.36)
+      ..lineTo(center.dx + radius * 0.34, center.dy - radius * 0.1)
+      ..lineTo(center.dx + radius * 0.2, center.dy + radius * 0.32)
+      ..lineTo(center.dx - radius * 0.2, center.dy + radius * 0.32)
+      ..lineTo(center.dx - radius * 0.34, center.dy - radius * 0.1)
+      ..close();
+    canvas.drawPath(pentagon, pentagonPaint);
+
+    final seamPaint = Paint()
+      ..color = const Color(0xFF1A1A1A).withOpacity(0.7)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.2;
+    canvas.drawArc(Rect.fromCircle(center: center, radius: radius * 0.82), 0.2, 1.0, false, seamPaint);
+    canvas.drawArc(Rect.fromCircle(center: center, radius: radius * 0.82), 2.0, 1.0, false, seamPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
 class _UpcomingMatchesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -314,7 +455,7 @@ class _UpcomingMatchesCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          const MatchCard(isLive: false),
+          const MatchCard(isLive: true),
         ],
       ),
     );
@@ -439,6 +580,98 @@ class _QuickAccessCard extends StatelessWidget {
               fontWeight: FontWeight.w900,
               letterSpacing: 1,
               color: Colors.white.withOpacity(0.55),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NewsCard extends StatelessWidget {
+  final String tag;
+  final String time;
+  final String title;
+  final String imageUrl;
+
+  const _NewsCard({required this.tag, required this.time, required this.title, required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppTheme.cardBg.withOpacity(0.92),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: AppTheme.borderSide),
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: SizedBox(
+              width: 86,
+              height: 66,
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xFF1E2A24), Color(0xFF0F1115)],
+                    ),
+                  ),
+                  child: const Icon(Icons.photo, color: Colors.white24, size: 32),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: AppTheme.emerald500,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        tag,
+                        style: GoogleFonts.outfit(
+                          color: Colors.black,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '• $time',
+                      style: GoogleFonts.outfit(
+                        color: Colors.white.withOpacity(0.36),
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  title,
+                  style: GoogleFonts.outfit(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w900,
+                    height: 1.08,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
