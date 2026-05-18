@@ -1,15 +1,30 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+
 import '../core/theme/app_theme.dart';
+import '../models/match_model.dart';
 
 class MatchCard extends StatelessWidget {
   final bool isLive;
+  final MatchModel? match;
 
-  const MatchCard({super.key, required this.isLive});
+  const MatchCard({super.key, required this.isLive, this.match});
 
   @override
   Widget build(BuildContext context) {
+    final hasMatch = match != null;
+    final homeTeamName = match?.homeTeam.name.isNotEmpty == true ? match!.homeTeam.name : 'BRASIL';
+    final awayTeamName = match?.awayTeam.name.isNotEmpty == true ? match!.awayTeam.name : 'FRANÇA';
+    final homeScore = match?.homeScore?.toString() ?? '2';
+    final awayScore = match?.awayScore?.toString() ?? '1';
+    final venue = match?.venue.isNotEmpty == true ? match!.venue : 'METLIFE STADIUM, NY';
+    final stageLabel = match?.stage.isNotEmpty == true ? match!.stage.toUpperCase() : 'OITAVAS';
+    final timeLabel = match != null
+        ? DateFormat('HH:mm', 'pt_BR').format(match!.date.toLocal())
+        : '16:00';
+    final liveLabel = match?.minute != null ? 'AO VIVO ${match!.minute}' : 'AO VIVO 65\'';
+
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.cardBg.withOpacity(0.92),
@@ -33,7 +48,7 @@ class MatchCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      'OITAVAS',
+                      stageLabel,
                       style: GoogleFonts.outfit(
                         fontSize: 10,
                         fontWeight: FontWeight.w900,
@@ -52,7 +67,7 @@ class MatchCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'GERAL',
+                      hasMatch ? 'REAL' : 'GERAL',
                       style: GoogleFonts.outfit(
                         fontSize: 10,
                         fontWeight: FontWeight.w900,
@@ -74,7 +89,7 @@ class MatchCard extends StatelessWidget {
                           blurRadius: 12,
                           spreadRadius: 1,
                         )
-                      ]
+                      ],
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -89,7 +104,7 @@ class MatchCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          'AO VIVO 65\'',
+                          liveLabel,
                           style: GoogleFonts.outfit(
                             color: Colors.white,
                             fontSize: 10,
@@ -108,7 +123,7 @@ class MatchCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      'HOJE, 16:00',
+                      timeLabel,
                       style: GoogleFonts.outfit(
                         color: Colors.white.withOpacity(0.4),
                         fontSize: 10,
@@ -129,7 +144,7 @@ class MatchCard extends StatelessWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          'BRASIL',
+                          homeTeamName.toUpperCase(),
                           style: GoogleFonts.outfit(
                             fontWeight: FontWeight.w900,
                             fontSize: 14,
@@ -140,17 +155,7 @@ class MatchCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.05),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Center(
-                          child: Text('🇧🇷', style: TextStyle(fontSize: 24)),
-                        ),
-                      ),
+                      _TeamBadge(label: match?.homeTeam.code ?? 'BRA', fallback: '🇧🇷'),
                     ],
                   ),
                 ),
@@ -158,88 +163,78 @@ class MatchCard extends StatelessWidget {
                   constraints: const BoxConstraints(minWidth: 70),
                   child: Align(
                     alignment: Alignment.center,
-                    child: isLive 
-                      ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '2',
-                            style: GoogleFonts.outfit(
-                              fontSize: 32,
-                              fontWeight: FontWeight.w900,
-                              color: AppTheme.emerald500,
-                              shadows: [
-                                Shadow(
-                                  color: AppTheme.emerald500.withOpacity(0.45),
-                                  blurRadius: 14,
-                                )
-                              ]
+                    child: isLive
+                        ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                homeScore,
+                                style: GoogleFonts.outfit(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w900,
+                                  color: AppTheme.emerald500,
+                                  shadows: [
+                                    Shadow(
+                                      color: AppTheme.emerald500.withOpacity(0.45),
+                                      blurRadius: 14,
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                child: Text(
+                                  ':',
+                                  style: GoogleFonts.outfit(
+                                    color: Colors.white.withOpacity(0.1),
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w100,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                awayScore,
+                                style: GoogleFonts.outfit(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w900,
+                                  color: AppTheme.emerald500,
+                                  shadows: [
+                                    Shadow(
+                                      color: AppTheme.emerald500.withOpacity(0.4),
+                                      blurRadius: 10,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )
+                        : Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.05),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: Colors.white.withOpacity(0.05)),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: Text(
-                              ':',
+                              timeLabel,
                               style: GoogleFonts.outfit(
-                                color: Colors.white.withOpacity(0.1),
-                                fontSize: 24,
-                                fontWeight: FontWeight.w100,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 14,
+                                color: Colors.white,
                               ),
                             ),
                           ),
-                          Text(
-                            '1',
-                            style: GoogleFonts.outfit(
-                              fontSize: 32,
-                              fontWeight: FontWeight.w900,
-                              color: AppTheme.emerald500,
-                              shadows: [
-                                Shadow(
-                                  color: AppTheme.emerald500.withOpacity(0.4),
-                                  blurRadius: 10,
-                                )
-                              ]
-                            ),
-                          ),
-                        ],
-                      )
-                      : Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.05),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.white.withOpacity(0.05)),
-                          ),
-                          child: Text(
-                            '16:00',
-                            style: GoogleFonts.outfit(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 14,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
                   ),
                 ),
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.05),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Center(
-                          child: Text('🇫🇷', style: TextStyle(fontSize: 24)),
-                        ),
-                      ),
+                      _TeamBadge(label: match?.awayTeam.code ?? 'FRA', fallback: '🇫🇷'),
                       const SizedBox(width: 12),
                       Flexible(
                         child: Text(
-                          'FRANÇA',
+                          awayTeamName.toUpperCase(),
                           style: GoogleFonts.outfit(
                             fontWeight: FontWeight.w900,
                             fontSize: 14,
@@ -270,7 +265,7 @@ class MatchCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
-                    'METLIFE STADIUM, NY',
+                    venue,
                     style: GoogleFonts.outfit(
                       fontSize: 10,
                       color: Colors.white.withOpacity(0.2),
@@ -292,6 +287,35 @@ class MatchCard extends StatelessWidget {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TeamBadge extends StatelessWidget {
+  final String label;
+  final String fallback;
+
+  const _TeamBadge({required this.label, required this.fallback});
+
+  @override
+  Widget build(BuildContext context) {
+    final initials = label.trim().isNotEmpty
+        ? label.trim().split(RegExp(r'\s+')).take(2).map((part) => part.isNotEmpty ? part[0] : '').join()
+        : '';
+
+    return Container(
+      width: 44,
+      height: 44,
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.05),
+        shape: BoxShape.circle,
+      ),
+      child: Center(
+        child: Text(
+          initials.isNotEmpty ? initials.toUpperCase() : fallback,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
         ),
       ),
     );

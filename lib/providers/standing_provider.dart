@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/api_service.dart';
 
 class StandingProvider with ChangeNotifier {
   // Estado e dados de classificação (standings)
@@ -13,8 +14,12 @@ class StandingProvider with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    // TODO: implementar chamada à API e mapeamento para modelos
-    await Future.delayed(const Duration(milliseconds: 200));
+    try {
+      final data = await ApiService.fetchStandings();
+      _standings = data;
+    } catch (e) {
+      // falha silenciosa — manter estado anterior
+    }
 
     _isLoading = false;
     notifyListeners();

@@ -1,9 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../core/theme/app_theme.dart';
+import 'package:provider/provider.dart';
 
-class StandingsScreen extends StatelessWidget {
+import '../core/theme/app_theme.dart';
+import '../providers/standing_provider.dart';
+
+class StandingsScreen extends StatefulWidget {
   const StandingsScreen({super.key});
+
+  @override
+  State<StandingsScreen> createState() => _StandingsScreenState();
+}
+
+class _StandingsScreenState extends State<StandingsScreen> {
+  bool _loaded = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_loaded) {
+      _loaded = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        context.read<StandingProvider>().loadStandings();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,48 +39,65 @@ class StandingsScreen extends StatelessWidget {
           ),
         ),
         child: SafeArea(
-          child: ListView(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'CLASSIFICAÇÃO',
-                      style: GoogleFonts.outfit(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: -1,
-                        color: Colors.white,
-                      ),
+          child: Consumer<StandingProvider>(
+            builder: (context, provider, _) {
+              final standings = provider.standings;
+
+              return ListView(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'CLASSIFICAÇÃO',
+                          style: GoogleFonts.outfit(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: -1,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'FASE DE GRUPOS',
+                          style: GoogleFonts.outfit(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 4,
+                            color: Colors.white.withOpacity(0.3),
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      'FASE DE GRUPOS',
-                      style: GoogleFonts.outfit(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 4,
-                        color: Colors.white.withOpacity(0.3),
-                      ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: _StandingsCard(
+                      isLoading: provider.isLoading,
+                      standings: standings,
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: _buildGroupCard(context),
-              ),
-            ],
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _buildGroupCard(BuildContext context) {
+class _StandingsCard extends StatelessWidget {
+  final bool isLoading;
+  final List<Map<String, dynamic>> standings;
+
+  const _StandingsCard({required this.isLoading, required this.standings});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.cardBg.withOpacity(0.92),
@@ -88,17 +127,46 @@ class StandingsScreen extends StatelessWidget {
                   _buildStatHeader('SG'),
                   const SizedBox(width: 16),
                   _buildStatHeader('PT'),
-                ])
+                ]),
               ],
             ),
           ),
-          _buildTeamRow('🇧🇷', 'BRASIL', 3, 5, 9, 0, isQualified: true),
-          _buildDivider(),
-          _buildTeamRow('🇫🇷', 'FRANÇA', 3, 2, 6, 1, isQualified: true),
-          _buildDivider(),
-          _buildTeamRow('🇯🇵', 'JAPÃO', 3, -1, 3, 2),
-          _buildDivider(),
-          _buildTeamRow('🇲🇦', 'MARROCOS', 3, -6, 0, 3),
+          if (isLoading)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 48),
+              child: Center(child: CircularProgressIndicator()),
+            )
+          else if (standings.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+              child: Text(
+                'Nenhuma classificação retornada pela API.',
+                style: GoogleFonts.outfit(
+                  color: Colors.white.withOpacity(0.55),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            )
+          else
+            ...standings.asMap().entries.take(10).expand((entry) {
+              final index = entry.key;
+              final row = entry.value;
+              final isLast = index == standings.length - 1;
+              return [
+                _buildTeamRow(
+                  index: index + 1,
+                  name: row['teamName']?.toString() ?? '',
+                  code: row['tla']?.toString() ?? '',
+                  crest: row['crest']?.toString() ?? '',
+                  played: _asInt(row['playedGames']),
+                  goalDiff: _asInt(row['goalDifference']),
+                  points: _asInt(row['points']),
+                  isQualified: index < 2,
+                ),
+                if (!isLast) _buildDivider(),
+              ];
+            }),
           const SizedBox(height: 12),
           _buildFooter(),
         ],
@@ -130,7 +198,16 @@ class StandingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTeamRow(String flag, String name, int played, int goalDiff, int points, int rank, {bool isQualified = false}) {
+  Widget _buildTeamRow({
+    required int index,
+    required String name,
+    required String code,
+    required String crest,
+    required int played,
+    required int goalDiff,
+    required int points,
+    required bool isQualified,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Row(
@@ -138,7 +215,7 @@ class StandingsScreen extends StatelessWidget {
           SizedBox(
             width: 16,
             child: Text(
-              (rank + 1).toString(),
+              index.toString(),
               style: GoogleFonts.outfit(
                 fontSize: 10,
                 fontWeight: FontWeight.w900,
@@ -154,7 +231,12 @@ class StandingsScreen extends StatelessWidget {
               color: Colors.white.withOpacity(0.05),
               shape: BoxShape.circle,
             ),
-            child: Center(child: Text(flag, style: const TextStyle(fontSize: 16))),
+            child: Center(
+              child: Text(
+                code.isNotEmpty ? code : name.characters.take(2).toString().toUpperCase(),
+                style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w900),
+              ),
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -242,4 +324,6 @@ class StandingsScreen extends StatelessWidget {
       ),
     );
   }
+
+  int _asInt(dynamic value) => int.tryParse(value?.toString() ?? '') ?? 0;
 }

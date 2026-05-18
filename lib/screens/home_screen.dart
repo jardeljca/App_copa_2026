@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../core/theme/app_theme.dart';
 import '../widgets/match_card.dart';
+import '../providers/match_provider.dart';
+import '../models/match_model.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -423,9 +426,33 @@ class _SoccerBallPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-class _UpcomingMatchesCard extends StatelessWidget {
+class _UpcomingMatchesCard extends StatefulWidget {
+  const _UpcomingMatchesCard();
+
+  @override
+  State<_UpcomingMatchesCard> createState() => _UpcomingMatchesCardState();
+}
+
+class _UpcomingMatchesCardState extends State<_UpcomingMatchesCard> {
+  bool _started = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_started) {
+      _started = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        context.read<MatchProvider>().loadUpcoming();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<MatchProvider>(context);
+    final upcoming = provider.upcoming;
+
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -455,7 +482,23 @@ class _UpcomingMatchesCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          const MatchCard(isLive: true),
+          if (provider.isLoading)
+            const SizedBox(height: 100, child: Center(child: CircularProgressIndicator()))
+          else if (upcoming.isEmpty)
+            const MatchCard(isLive: true)
+          else
+            Column(
+              children: upcoming
+                  .take(2)
+                  .map((m) => Padding(
+                        padding: const EdgeInsets.only(bottom: 12.0),
+                        child: MatchCard(
+                          isLive: m.status == MatchStatus.live,
+                          match: m,
+                        ),
+                      ))
+                  .toList(),
+            ),
         ],
       ),
     );
@@ -539,50 +582,6 @@ class _VideoCard extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _QuickAccessCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-
-  const _QuickAccessCard({required this.icon, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 140,
-      margin: const EdgeInsets.only(left: 8, right: 8),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppTheme.cardBg.withOpacity(0.92),
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: AppTheme.borderSide),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: AppTheme.emerald500.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, size: 16, color: AppTheme.emerald500),
-          ),
-          const Spacer(),
-          Text(
-            title.toUpperCase(),
-            style: GoogleFonts.outfit(
-              fontSize: 10,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 1,
-              color: Colors.white.withOpacity(0.55),
-            ),
-          ),
-        ],
       ),
     );
   }

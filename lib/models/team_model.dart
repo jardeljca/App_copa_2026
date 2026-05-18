@@ -13,10 +13,19 @@ class TeamModel {
 
   factory TeamModel.fromJson(Map<String, dynamic> json) {
     return TeamModel(
-      id: json['id'],
-      name: json['name'],
-      code: json['code'],
-      flagUrl: json['flagUrl'],
+      id: json['id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      code: json['code']?.toString() ?? '',
+      flagUrl: json['flagUrl']?.toString() ?? '',
+    );
+  }
+
+  factory TeamModel.fromFootballData(Map<String, dynamic> json) {
+    return TeamModel(
+      id: json['id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      code: json['tla']?.toString() ?? json['code']?.toString() ?? '',
+      flagUrl: json['crest']?.toString() ?? json['flag']?.toString() ?? '',
     );
   }
 }
