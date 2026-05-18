@@ -188,76 +188,91 @@ class _Header extends StatelessWidget {
 class _HeroBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 212,
       width: double.infinity,
-      decoration: BoxDecoration(
+      child: ClipRRect(
         borderRadius: BorderRadius.circular(36),
-        image: const DecorationImage(
-          image: NetworkImage('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80&w=1200'),
-          fit: BoxFit.cover,
-          alignment: Alignment.center,
-        ),
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(36),
-          gradient: LinearGradient(
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-            colors: [
-              Colors.black.withOpacity(0.82),
-              Colors.black.withOpacity(0.22),
-              Colors.transparent,
-            ],
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
+          fit: StackFit.expand,
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppTheme.emerald500,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.emerald500.withOpacity(0.28),
-                    blurRadius: 18,
-                    spreadRadius: 1,
+            Image.network(
+              'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80&w=1200',
+              fit: BoxFit.cover,
+              alignment: Alignment.center,
+              errorBuilder: (context, error, stackTrace) => Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Color(0xFF1E2A24), Color(0xFF0F1115)],
                   ),
-                ],
-              ),
-              child: Text(
-                'DESTAQUE',
-                style: GoogleFonts.outfit(
-                  color: Colors.black,
-                  fontSize: 9,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 1,
                 ),
               ),
             ),
-            const SizedBox(height: 10),
-            Text(
-              'CAMINHO ATÉ A GLÓRIA',
-              style: GoogleFonts.outfit(
-                fontSize: 27,
-                fontWeight: FontWeight.w900,
-                height: 0.88,
-                letterSpacing: -1.0,
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Colors.black.withOpacity(0.82),
+                    Colors.black.withOpacity(0.22),
+                    Colors.transparent,
+                  ],
+                ),
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Acompanhe cada momento da maior competição do planeta.',
-              style: GoogleFonts.outfit(
-                fontSize: 13.5,
-                color: Colors.white.withOpacity(0.66),
-                fontWeight: FontWeight.w600,
-                height: 1.18,
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: AppTheme.emerald500,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppTheme.emerald500.withOpacity(0.28),
+                          blurRadius: 18,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      'DESTAQUE',
+                      style: GoogleFonts.outfit(
+                        color: Colors.black,
+                        fontSize: 9,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'CAMINHO ATÉ A GLÓRIA',
+                    style: GoogleFonts.outfit(
+                      fontSize: 27,
+                      fontWeight: FontWeight.w900,
+                      height: 0.88,
+                      letterSpacing: -1.0,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Acompanhe cada momento da maior competição do planeta.',
+                    style: GoogleFonts.outfit(
+                      fontSize: 13.5,
+                      color: Colors.white.withOpacity(0.66),
+                      fontWeight: FontWeight.w600,
+                      height: 1.18,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -317,56 +332,69 @@ class _VideoCard extends StatelessWidget {
     return Container(
       width: 280,
       margin: const EdgeInsets.only(left: 8, right: 8),
-      decoration: BoxDecoration(
+      child: ClipRRect(
         borderRadius: BorderRadius.circular(36),
-        image: DecorationImage(
-          image: NetworkImage(imageUrl),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(36),
-          gradient: LinearGradient(
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-            colors: [Colors.black.withOpacity(0.8), Colors.transparent],
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
+          fit: StackFit.expand,
           children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: AppTheme.emerald500.withOpacity(0.12),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppTheme.emerald500.withOpacity(0.25),
-                        blurRadius: 12,
-                      )
+            Image.network(
+              imageUrl,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Color(0xFF1E2A24), Color(0xFF0F1115)],
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [Colors.black.withOpacity(0.8), Colors.transparent],
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: AppTheme.emerald500.withOpacity(0.12),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppTheme.emerald500.withOpacity(0.25),
+                              blurRadius: 12,
+                            )
+                          ],
+                        ),
+                        child: const Icon(FontAwesomeIcons.play, size: 12, color: Colors.white),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: GoogleFonts.outfit(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            height: 1.1,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                  child: const Icon(FontAwesomeIcons.play, size: 12, color: Colors.white),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: GoogleFonts.outfit(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      height: 1.1,
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
