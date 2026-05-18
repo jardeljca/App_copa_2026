@@ -1,73 +1,46 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
-
-
 # App Copa 2026
 
-Aplicativo móvel em Flutter para acompanhar a Copa do Mundo 2026 com um backend Node.js simples responsável por consultar a API de futebol.
+App móvel para acompanhar a Copa do Mundo 2026. Concebido como um cliente nativo Flutter apoiado por um backend leve em Node.js, o projeto centraliza informações de competições, partidas, classificação e chaves do torneio.
 
-## Estrutura do repositório
+**Visão**
 
-- `lib/` - código Flutter (app mobile)
-- `server.ts` - backend Node/Express (API proxy)
-- `package.json` - scripts e dependências do backend
-- `pubspec.yaml` - dependências Flutter
+Prover uma experiência móvel fluida e focada em fãs de futebol: dados em tempo real, navegação simples pelas fases do torneio e apresentação clara de resultados e estatísticas.
 
-## Pré-requisitos
+**Objetivos do projeto**
 
-- Flutter SDK instalado
-- Node.js >= 18
-- `FOOTBALL_DATA_API_KEY` (variável de ambiente para Football-Data.org)
+- Fornecer um cliente móvel nativo com UX otimizada para partidas e tabelas.
+- Manter a lógica de integração com APIs e regras de negócio no backend, garantindo segurança e flexibilidade.
+- Facilitar futuras integrações (notificações, analytics, monetização).
 
-## Rodando o backend (desenvolvimento)
+**Principais funcionalidades**
 
-1. Instale dependências:
+- Visualização de partidas por fase e por dia
+- Chaveamento (bracket) com avanço de equipes
+- Tabelas de classificação por grupo
+- Página de detalhes da partida (elenco, placar, estatísticas básicas)
+- Cache local e imagens otimizadas para melhor performance
 
-```bash
-npm install
-```
+**Arquitetura resumida**
 
-2. Crie um arquivo `.env` com a chave:
+- Aplicativo: Flutter (Dart) — interface, gestão de estado e persistência local.
+- Backend: Node.js + Express — proxy para APIs externas, agregação de dados e camada de segurança.
+- API externa (fonte de verdade): Football-Data.org (ou provedores equivalentes).
 
-```
-FOOTBALL_DATA_API_KEY=your_api_key_here
-PORT=3000
-```
+**Stack tecnológico**
 
-3. Inicie o servidor em modo dev:
+- Flutter / Dart
+- Provider (ou outro gerenciador de estado dependendo da evolução)
+- Node.js / Express
+- Integração com serviços de terceiros via API REST
 
-```bash
-npm run dev
-```
+**Status**
 
-O backend expõe a rota proxy `/api/football/*`. Ex.: `/api/football/competitions`.
+Projeto em desenvolvimento; estrutura inicial do app Flutter e backend implementados. Trabalho em andamento para consolidar modelos de dados e rotas protegidas.
 
-## Rodando o app Flutter
+**Licença & contribuições**
 
-1. Instale dependências Flutter:
+Repositório aberto para contribuições. Consulte os arquivos de configuração e políticas do projeto para detalhes sobre a licença e normas de contribuição.
 
-```bash
-flutter pub get
-```
-
-2. Rode no emulador/dispositivo:
-
-```bash
-flutter run
-```
-
-O app deve fazer chamadas para o backend (ajuste a URL base se necessário).
-
-## Notas & recomendações
-
-- Este repositório foi ajustado para conter apenas o app Flutter e o backend Node.
-- Considere adicionar um arquivo `.env.example` e configurar CI que rode `npm ci` e `flutter analyze`.
-- Mantenha a chave da API segura (não commitar `.env`).
-
-## Contato
-
-Se precisar, posso gerar o `.env.example`, um `README` mais detalhado ou um workflow de CI.
 
 ## Run Locally
 
