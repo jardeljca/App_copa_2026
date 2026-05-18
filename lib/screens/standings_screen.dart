@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../core/theme/app_theme.dart';
 
 class StandingsScreen extends StatelessWidget {
   const StandingsScreen({super.key});
@@ -12,19 +13,15 @@ class StandingsScreen extends StatelessWidget {
           gradient: RadialGradient(
             center: const Alignment(0.8, -0.6),
             radius: 1.2,
-            colors: [
-              const Color(0xFF00E676).withOpacity(0.05),
-              const Color(0xFF0D0D0D),
-            ],
+            colors: [AppTheme.emerald500.withOpacity(0.05), AppTheme.background],
           ),
         ),
         child: SafeArea(
-          child: CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+          child: ListView(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -37,6 +34,7 @@ class StandingsScreen extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
+                    const SizedBox(height: 6),
                     Text(
                       'FASE DE GRUPOS',
                       style: GoogleFonts.outfit(
@@ -49,19 +47,12 @@ class StandingsScreen extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                    child: _buildGroupCard(context),
-                  );
-                },
-                childCount: 1, // Exemplo Grupo A
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: _buildGroupCard(context),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -70,9 +61,9 @@ class StandingsScreen extends StatelessWidget {
   Widget _buildGroupCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.03),
-        borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: Colors.white.withOpacity(0.08)),
+        color: AppTheme.cardBg.withOpacity(0.92),
+        borderRadius: BorderRadius.circular(36),
+        border: Border.all(color: AppTheme.borderSide),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,21 +76,19 @@ class StandingsScreen extends StatelessWidget {
                 Text(
                   'GRUPO A',
                   style: GoogleFonts.outfit(
-                    color: const Color(0xFF00E676),
+                    color: AppTheme.emerald500,
                     fontWeight: FontWeight.w900,
                     fontSize: 12,
                     letterSpacing: 2,
                   ),
                 ),
-                Row(
-                  children: [
-                    _buildStatHeader('J'),
-                    const SizedBox(width: 16),
-                    _buildStatHeader('SG'),
-                    const SizedBox(width: 16),
-                    _buildStatHeader('PT'),
-                  ],
-                ),
+                Row(children: [
+                  _buildStatHeader('J'),
+                  const SizedBox(width: 16),
+                  _buildStatHeader('SG'),
+                  const SizedBox(width: 16),
+                  _buildStatHeader('PT'),
+                ])
               ],
             ),
           ),
@@ -153,7 +142,7 @@ class StandingsScreen extends StatelessWidget {
               style: GoogleFonts.outfit(
                 fontSize: 10,
                 fontWeight: FontWeight.w900,
-                color: isQualified ? const Color(0xFF00E676) : Colors.white.withOpacity(0.15),
+                color: isQualified ? AppTheme.emerald500 : Colors.white.withOpacity(0.15),
               ),
             ),
           ),
@@ -227,7 +216,7 @@ class StandingsScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.02),
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(36)),
       ),
       child: Row(
         children: [

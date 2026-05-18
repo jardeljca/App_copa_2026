@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../core/theme/app_theme.dart';
 
 class BracketScreen extends StatelessWidget {
   const BracketScreen({super.key});
@@ -12,59 +13,58 @@ class BracketScreen extends StatelessWidget {
           gradient: RadialGradient(
             center: const Alignment(0.8, -0.6),
             radius: 1.2,
-            colors: [
-              const Color(0xFF00E676).withOpacity(0.05),
-              const Color(0xFF0D0D0D),
-            ],
+            colors: [AppTheme.emerald500.withOpacity(0.05), AppTheme.background],
           ),
         ),
         child: SafeArea(
           child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'MATA-MATA',
-                    style: GoogleFonts.outfit(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -1,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    'CAMINHO PARA A TAÇA',
-                    style: GoogleFonts.outfit(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 4,
-                      color: Colors.white.withOpacity(0.3),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildStage('OITAVAS', 4),
-                    _buildStage('QUARTAS', 2),
-                    _buildStage('SEMIFINAL', 1),
-                    _buildStage('FINAL', 0),
+                    Text(
+                      'MATA-MATA',
+                      style: GoogleFonts.outfit(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -1,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'CAMINHO PARA A TAÇA',
+                      style: GoogleFonts.outfit(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 4,
+                        color: Colors.white.withOpacity(0.3),
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildStage('OITAVAS', 4),
+                      _buildStage('QUARTAS', 2),
+                      _buildStage('SEMIFINAL', 1),
+                      _buildStage('FINAL', 0),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -86,15 +86,14 @@ class BracketScreen extends StatelessWidget {
               letterSpacing: 4,
             ),
           ),
-          const SizedBox(height: 24),
-          Expanded(
-            child: ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: matchCount == 0 ? 1 : matchCount,
-              itemBuilder: (context, index) {
-                if (matchCount == 0) return _buildWinnerCard();
-                return _buildBracketMatch(index);
-              },
+          const SizedBox(height: 16),
+          Column(
+            children: List.generate(
+              matchCount == 0 ? 1 : matchCount,
+              (index) => Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: matchCount == 0 ? _buildWinnerCard() : _buildBracketMatch(index),
+              ),
             ),
           ),
         ],
@@ -106,24 +105,20 @@ class BracketScreen extends StatelessWidget {
     final bool isPlaceHolder = index > 0;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.03),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: isPlaceHolder ? Colors.white.withOpacity(0.03) : Colors.white.withOpacity(0.08),
-          style: isPlaceHolder ? BorderStyle.solid : BorderStyle.solid,
-        ),
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: isPlaceHolder ? Colors.white.withOpacity(0.03) : AppTheme.borderSide),
       ),
       child: Opacity(
-        opacity: isPlaceHolder ? 0.2 : 1.0,
+        opacity: isPlaceHolder ? 0.22 : 1.0,
         child: Column(
           children: [
             _BracketTeam(flag: '🇧🇷', name: 'BRASIL', score: '-'),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             _buildInternalDivider(),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             _BracketTeam(flag: '🇫🇷', name: 'FRANÇA', score: '-', isOpponent: true),
           ],
         ),
@@ -153,42 +148,32 @@ class BracketScreen extends StatelessWidget {
 
   Widget _buildWinnerCard() {
     return Container(
-      height: 180,
+      height: 140,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFF00E676).withOpacity(0.05),
-        borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: const Color(0xFF00E676).withOpacity(0.1)),
+        color: AppTheme.emerald500.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(36),
+        border: Border.all(color: AppTheme.emerald500.withOpacity(0.1)),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xFF00E676).withOpacity(0.1),
+              color: AppTheme.emerald500.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.emoji_events, color: Color(0xFF00E676), size: 32),
+            child: const Icon(Icons.emoji_events, color: AppTheme.emerald500, size: 28),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 12),
           Text(
             'GRANDE FINAL',
             style: GoogleFonts.outfit(
-              color: const Color(0xFF00E676),
+              color: AppTheme.emerald500,
               fontWeight: FontWeight.w900,
               fontSize: 10,
               letterSpacing: 2,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'LUSAIL STADIUM',
-            style: GoogleFonts.outfit(
-              color: Colors.white.withOpacity(0.3),
-              fontWeight: FontWeight.w900,
-              fontSize: 9,
-              letterSpacing: 1,
             ),
           ),
         ],
@@ -203,12 +188,7 @@ class _BracketTeam extends StatelessWidget {
   final String score;
   final bool isOpponent;
 
-  const _BracketTeam({
-    required this.flag,
-    required this.name,
-    required this.score,
-    this.isOpponent = false,
-  });
+  const _BracketTeam({required this.flag, required this.name, required this.score, this.isOpponent = false});
 
   @override
   Widget build(BuildContext context) {
@@ -220,32 +200,14 @@ class _BracketTeam extends StatelessWidget {
             Container(
               width: 24,
               height: 24,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
-                shape: BoxShape.circle,
-              ),
+              decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), shape: BoxShape.circle),
               child: Center(child: Text(flag, style: const TextStyle(fontSize: 14))),
             ),
             const SizedBox(width: 12),
-            Text(
-              name,
-              style: GoogleFonts.outfit(
-                fontWeight: FontWeight.w900,
-                fontSize: 12,
-                color: isOpponent ? Colors.white.withOpacity(0.4) : Colors.white,
-                letterSpacing: -0.2,
-              ),
-            ),
+            Text(name, style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 12, color: isOpponent ? Colors.white.withOpacity(0.4) : Colors.white)),
           ],
         ),
-        Text(
-          score,
-          style: GoogleFonts.outfit(
-            fontWeight: FontWeight.w900,
-            fontSize: 12,
-            color: isOpponent ? Colors.white.withOpacity(0.2) : Colors.white,
-          ),
-        ),
+        Text(score, style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 12, color: isOpponent ? Colors.white.withOpacity(0.2) : Colors.white)),
       ],
     );
   }

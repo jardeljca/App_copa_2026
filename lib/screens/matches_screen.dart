@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/match_model.dart';
 import '../widgets/match_card.dart';
+import '../core/theme/app_theme.dart';
 
 class MatchesScreen extends StatelessWidget {
   const MatchesScreen({super.key});
@@ -8,13 +8,14 @@ class MatchesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0A),
+      backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        foregroundColor: Colors.white,
         title: const Text(
           'CALENDÁRIO',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.black, letterSpacing: 2),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: 2),
         ),
       ),
       body: DefaultTabController(
@@ -23,12 +24,18 @@ class MatchesScreen extends StatelessWidget {
           children: [
             TabBar(
               isScrollable: true,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               tabAlignment: TabAlignment.start,
               dividerColor: Colors.transparent,
               indicatorColor: const Color(0xFF00E676),
               labelColor: const Color(0xFF00E676),
               unselectedLabelColor: Colors.grey,
               labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicator: BoxDecoration(
+                color: const Color(0xFF00E676).withOpacity(0.08),
+                borderRadius: BorderRadius.circular(20),
+              ),
               tabs: const [
                 Tab(text: 'TODOS'),
                 Tab(text: 'HOJE'),

@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static const Color emerald500 = Color(0xFF00E676);
-  static const Color background = Color(0xFF0D0D0D);
-  static const Color cardBg = Color(0xFF161616);
+  static const Color background = Color(0xFF0F1115);
+  static const Color cardBg = Color(0xFF0F1214);
   static const Color borderSide = Color(0x14FFFFFF);
 
   static ThemeData darkTheme = ThemeData(
@@ -17,19 +17,12 @@ class AppTheme {
       onSurface: Colors.white,
     ),
     textTheme: GoogleFonts.outfitTextTheme(ThemeData.dark().textTheme).copyWith(
-      displayLarge: GoogleFonts.outfit(fontWeight: FontWeight.black, letterSpacing: -1),
-      displayMedium: GoogleFonts.outfit(fontWeight: FontWeight.black, letterSpacing: -0.5),
+      displayLarge: GoogleFonts.outfit(fontWeight: FontWeight.w900, letterSpacing: -1),
+      displayMedium: GoogleFonts.outfit(fontWeight: FontWeight.w900, letterSpacing: -0.5),
       headlineMedium: GoogleFonts.outfit(fontWeight: FontWeight.bold, letterSpacing: -0.5),
-      bodyMedium: GoogleFonts.geist(color: Colors.white.withOpacity(0.9)),
+      bodyMedium: GoogleFonts.outfit(color: Colors.white.withOpacity(0.92)),
     ),
-    cardTheme: CardTheme(
-      color: cardBg,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(28),
-        side: const BorderSide(color: borderSide),
-      ),
-      elevation: 0,
-    ),
+    // cardTheme removed temporarily to avoid SDK type mismatch on this system
   );
 
   static ThemeData lightTheme = darkTheme; // Mantendo dark como prioritário

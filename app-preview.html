@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Copa 2026 - Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1a1a;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(0, 230, 118, 0.05) 0%, #0d0d0d 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Mobile Phone Frame */
+        .phone-frame {
+            background: #0d0d0d;
+            border-radius: 40px;
+            border: 8px solid #1a1a1a;
+            box-shadow: 0 0 0 1px #333;
+            overflow: hidden;
+        }
+
+        .phone-notch {
+            height: 28px;
+            background: #000;
+            border-radius: 0 0 20px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .screen {
+            background: linear-gradient(135deg, rgba(0, 230, 118, 0.05) 0%, #0d0d0d 100%);
+            height: 812px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            padding: 20px 24px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .header-title p {
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 230, 118, 0.1);
+            border: 1px solid rgba(0, 230, 118, 0.3);
+            color: #00e676;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .icon-btn:hover {
+            background: rgba(0, 230, 118, 0.2);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 12px;
+            height: 12px;
+            background: #ff4444;
+            border-radius: 50%;
+            border: 2px solid #0d0d0d;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            margin: 24px;
+            height: 225px;
+            border-radius: 28px;
+            padding: 22px;
+            color: #fff;
+            display: flex;
+            align-items: flex-end;
+            background-image:
+                linear-gradient(to top, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.16)),
+                url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80&w=1200');
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.34);
+            overflow: hidden;
+        }
+
+        .hero-banner-content {
+            max-width: 72%;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: #00e676;
+            color: #0d0d0d;
+            font-size: 8px;
+            font-weight: 900;
+            padding: 5px 10px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            letter-spacing: -0.2px;
+        }
+
+        .hero-banner h2 {
+            font-size: 26px;
+            line-height: 0.92;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: -0.9px;
+        }
+
+        .hero-banner p {
+            font-size: 13px;
+            line-height: 1.2;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 240px;
+        }
+
+        /* Upcoming Matches Card */
+        .match-card {
+            margin: 24px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            color: white;
+        }
+
+        .match-card h3 {
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #00e676;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .match-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .match-item:last-child {
+            border-bottom: none;
+        }
+
+        .team {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .team-flag {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(0, 230, 118, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .team-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .match-time {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+            margin: 0 16px;
+        }
+
+        /* Sections */
+        .section-title {
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #00e676;
+            margin: 32px 24px 16px;
+            text-transform: uppercase;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 0 24px;
+            margin-bottom: 24px;
+        }
+
+        .grid-item {
+            aspect-ratio: 1;
+            background: rgba(0, 230, 118, 0.08);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            flex-direction: column;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .grid-item:hover {
+            background: rgba(0, 230, 118, 0.12);
+            border-color: rgba(0, 230, 118, 0.4);
+        }
+
+        .grid-item-icon {
+            font-size: 24px;
+            color: #00e676;
+        }
+
+        .grid-item-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.8);
+            text-transform: uppercase;
+        }
+
+        /* Navigation */
+        .nav-bar {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            max-width: 360px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            border-radius: 30px;
+            padding: 12px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 20px;
+        }
+
+        .nav-item.active {
+            color: #00e676;
+        }
+
+        .nav-item-label {
+            font-size: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Scrollbar */
+        .screen::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .screen::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .screen::-webkit-scrollbar-thumb {
+            background: rgba(0, 230, 118, 0.3);
+            border-radius: 2px;
+        }
+
+        .screen::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 230, 118, 0.5);
+        }
+
+        /* Description */
+        .description {
+            color: white;
+            margin-top: 40px;
+            padding: 0 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .description h2 {
+            color: #00e676;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .description ul {
+            margin-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        .description li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="screen">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-title">
+                    <h1>COPA DO MUNDO 2026</h1>
+                    <p>OFFICIAL KICK-OFF</p>
+                </div>
+                <div class="header-buttons">
+                    <button class="icon-btn">🔍</button>
+                    <button class="icon-btn" style="position: relative;">
+                        🔔
+                        <span class="notification-badge"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Hero Banner -->
+            <div class="hero-banner">
+                <div class="hero-banner-content">
+                    <span class="hero-badge">DESTAQUE</span>
+                    <h2>CAMINHO ATÉ A GLÓRIA</h2>
+                    <p>Acompanhe cada momento da maior competição do planeta.</p>
+                </div>
+            </div>
+
+            <!-- Upcoming Matches -->
+            <div class="match-card">
+                <h3>Próximas Partidas</h3>
+                <div class="match-item">
+                    <div class="team">
+                        <div class="team-flag">🇧🇷</div>
+                        <div class="team-name">Brasil</div>
+                    </div>
+                    <div class="match-time">28 Jan</div>
+                    <div class="team">
+                        <div class="team-name">Colômbia</div>
+                        <div class="team-flag">🇨🇴</div>
+                    </div>
+                </div>
+                <div class="match-item">
+                    <div class="team">
+                        <div class="team-flag">🇦🇷</div>
+                        <div class="team-name">Argentina</div>
+                    </div>
+                    <div class="match-time">29 Jan</div>
+                    <div class="team">
+                        <div class="team-name">México</div>
+                        <div class="team-flag">🇲🇽</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Videos & Goals Section -->
+            <h3 class="section-title">Vídeos e Gols</h3>
+            <div class="grid">
+                <div class="grid-item">
+                    <div class="grid-item-icon">🎬</div>
+                    <div class="grid-item-label">Highlights</div>
+                </div>
+                <div class="grid-item">
+                    <div class="grid-item-icon">⚽</div>
+                    <div class="grid-item-label">Gols</div>
+                </div>
+            </div>
+
+            <!-- Quick Access Section -->
+            <h3 class="section-title">Acesso Rápido</h3>
+            <div class="grid">
+                <div class="grid-item">
+                    <div class="grid-item-icon">🏆</div>
+                    <div class="grid-item-label">Grupos</div>
+                </div>
+                <div class="grid-item">
+                    <div class="grid-item-icon">📊</div>
+                    <div class="grid-item-label">Classificação</div>
+                </div>
+                <div class="grid-item">
+                    <div class="grid-item-icon">🎲</div>
+                    <div class="grid-item-label">Chaves</div>
+                </div>
+                <div class="grid-item">
+                    <div class="grid-item-icon">👥</div>
+                    <div class="grid-item-label">Elencos</div>
+                </div>
+            </div>
+
+            <div style="height: 80px;"></div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <div class="nav-item active">
+            <span>🏠</span>
+            <span class="nav-item-label">Home</span>
+        </div>
+        <div class="nav-item">
+            <span>⚽</span>
+            <span class="nav-item-label">Partidas</span>
+        </div>
+        <div class="nav-item">
+            <span>🎲</span>
+            <span class="nav-item-label">Chaves</span>
+        </div>
+        <div class="nav-item">
+            <span>📊</span>
+            <span class="nav-item-label">Classif.</span>
+        </div>
+    </div>
+
+    <div class="description">
+        <h2>📱 App Copa 2026</h2>
+        <p>Uma aplicação móvel nativa em Flutter que traz toda a emoção da Copa do Mundo 2026 para a palma da sua mão.</p>
+
+        <h2 style="margin-top: 24px;">Funcionalidades Principais</h2>
+        <ul>
+            <li><strong>Home:</strong> Contagem regressiva, próximas partidas e destacados</li>
+            <li><strong>Partidas:</strong> Visualize todas as partidas por data e fase</li>
+            <li><strong>Chaves:</strong> Acompanhe o progresso das equipes no torneio</li>
+            <li><strong>Classificação:</strong> Veja a tabela de classificação dos grupos</li>
+        </ul>
+
+        <h2 style="margin-top: 24px;">Design & UX</h2>
+        <ul>
+            <li>🎨 Tema escuro moderno com acentos verde neon</li>
+            <li>⚡ Interface fluida com animações suaves</li>
+            <li>📱 Otimizado para todos os tamanhos de tela</li>
+            <li>🚀 Performance rápida com cache local</li>
+        </ul>
+
+        <h2 style="margin-top: 24px;">Stack Tecnológico</h2>
+        <ul>
+            <li><strong>Frontend:</strong> Flutter / Dart com Provider (state management)</li>
+            <li><strong>Backend:</strong> Node.js / Express (API Proxy)</li>
+            <li><strong>API Externa:</strong> Football-Data.org</li>
+            <li><strong>Design:</strong> Material Design 3 + Custom UI</li>
+        </ul>
+
+        <p style="margin-top: 24px; color: #888; font-size: 12px;">
+            Este é um preview estático do app. Para experimentar o app real, clone o repositório e rode no seu dispositivo Android/iOS com Flutter.
+        </p>
+    </div>
+</body>
+</html>

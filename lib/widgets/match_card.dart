@@ -1,5 +1,7 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../core/theme/app_theme.dart';
 
 class MatchCard extends StatelessWidget {
   final bool isLive;
@@ -10,9 +12,16 @@ class MatchCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.03),
-        borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: Colors.white.withOpacity(0.08)),
+        color: AppTheme.cardBg.withOpacity(0.92),
+        borderRadius: BorderRadius.circular(36),
+        border: Border.all(color: AppTheme.borderSide),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.25),
+            blurRadius: 24,
+            offset: const Offset(0, 12),
+          ),
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -57,12 +66,13 @@ class MatchCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: const Color(0xFFFF3B30),
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.red.withOpacity(0.3),
-                          blurRadius: 10,
+                          color: const Color(0xFFFF3B30).withOpacity(0.28),
+                          blurRadius: 12,
+                          spreadRadius: 1,
                         )
                       ]
                     ),
@@ -144,11 +154,12 @@ class MatchCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Container(
-                  minWidth: 70,
-                  alignment: Alignment.center,
-                  child: isLive 
-                    ? Row(
+                ConstrainedBox(
+                  constraints: const BoxConstraints(minWidth: 70),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: isLive 
+                      ? Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
@@ -156,11 +167,11 @@ class MatchCard extends StatelessWidget {
                             style: GoogleFonts.outfit(
                               fontSize: 32,
                               fontWeight: FontWeight.w900,
-                              color: const Color(0xFF00E676),
+                              color: AppTheme.emerald500,
                               shadows: [
                                 Shadow(
-                                  color: const Color(0xFF00E676).withOpacity(0.4),
-                                  blurRadius: 10,
+                                  color: AppTheme.emerald500.withOpacity(0.45),
+                                  blurRadius: 14,
                                 )
                               ]
                             ),
@@ -181,10 +192,10 @@ class MatchCard extends StatelessWidget {
                             style: GoogleFonts.outfit(
                               fontSize: 32,
                               fontWeight: FontWeight.w900,
-                              color: const Color(0xFF00E676),
+                              color: AppTheme.emerald500,
                               shadows: [
                                 Shadow(
-                                  color: const Color(0xFF00E676).withOpacity(0.4),
+                                  color: AppTheme.emerald500.withOpacity(0.4),
                                   blurRadius: 10,
                                 )
                               ]
@@ -192,22 +203,23 @@ class MatchCard extends StatelessWidget {
                           ),
                         ],
                       )
-                    : Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.05),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.white.withOpacity(0.05)),
-                        ),
-                        child: Text(
-                          '16:00',
-                          style: GoogleFonts.outfit(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 14,
-                            color: Colors.white,
+                      : Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.white.withOpacity(0.05)),
+                          ),
+                          child: Text(
+                            '16:00',
+                            style: GoogleFonts.outfit(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 14,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
+                  ),
                 ),
                 Expanded(
                   child: Row(
