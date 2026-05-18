@@ -1,0 +1,8 @@
+{
+  "name": "MundoCup 2026",
+  "description": "Aplicativo premium para acompanhar a Copa do Mundo em tempo real, com placares ao vivo, tabelas, calendário e estatísticas detalhadas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
