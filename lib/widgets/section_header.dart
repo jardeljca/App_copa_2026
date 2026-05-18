@@ -33,7 +33,7 @@ class SectionHeader extends StatelessWidget {
                 title,
                 style: const TextStyle(
                   fontSize: 12,
-                  fontWeight: FontWeight.black,
+                  fontWeight: FontWeight.w900,
                   letterSpacing: 1.5,
                   color: Colors.white70,
                 ),
@@ -45,7 +45,7 @@ class SectionHeader extends StatelessWidget {
               trailingText!,
               style: const TextStyle(
                 fontSize: 10,
-                fontWeight: FontWeight.black,
+                fontWeight: FontWeight.w900,
                 color: Color(0xFF00E676),
                 letterSpacing: 1,
               ),
